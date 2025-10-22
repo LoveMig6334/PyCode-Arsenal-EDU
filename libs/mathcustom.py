@@ -1,7 +1,7 @@
 from math import isqrt
 
 
-class MathCustom:
+class MathDCustom:
     @staticmethod
     def is_prime(num: int) -> bool:
         """Check if a number is prime."""
