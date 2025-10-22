@@ -42,3 +42,23 @@ class MathDCustom:
             factors.append(num)
 
         return factors
+
+    @staticmethod
+    def gcd(a: int, b: int) -> int:
+        """Return the greatest common divisor of two integers."""
+        while b:
+            a, b = b, a % b
+        return abs(a)
+
+    @staticmethod
+    def least_common_multiple(a: int, b: int) -> int:
+        """Return the least common multiple of two integers."""
+
+        return abs(a * b) // MathDCustom.gcd(a, b)
+
+
+if __name__ == "__main__":
+    print(MathDCustom.is_prime(29))  # True
+    print(MathDCustom.prime_factorize(315))  # [3, 3, 5, 7]
+    print(MathDCustom.gcd(48, 18))  # 6
+    print(MathDCustom.least_common_multiple(4, 9))  # 36
