@@ -16,6 +16,9 @@ def main() -> None:
     else:
         print(">>> Unknown status")
 
+    python_env = sys.executable
+    print(f"Python executable: {python_env}")
+
 
 if __name__ == "__main__":
     main()
