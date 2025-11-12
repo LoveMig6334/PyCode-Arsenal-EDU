@@ -38,6 +38,8 @@
         "spyderproject",
         "spyproject",
         "venv",
-        "webassets"
+        "webassets",
+        "xlabel",
+        "ylabel"
     ]
 }
