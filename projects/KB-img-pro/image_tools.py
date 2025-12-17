@@ -16,6 +16,13 @@ import numpy as np
 from PIL import Image, ImageEnhance, ImageFilter, ImageOps
 
 # =============================================================================
+# Path Configuration
+# =============================================================================
+
+# Get the directory where this script is located (for reliable path resolution)
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+
+# =============================================================================
 # Image I/O Utilities
 # =============================================================================
 
@@ -854,8 +861,8 @@ if __name__ == "__main__":
     print("Image Data Tools - Demo")
     print("-" * 40)
 
-    # Check if we have a test image
-    test_dir = "data/raw/can"
+    # Use absolute paths based on script location
+    test_dir = os.path.join(SCRIPT_DIR, "data", "raw", "can")
     if os.path.exists(test_dir):
         print(f"\nAnalyzing dataset in: {test_dir}")
         print_dataset_summary(test_dir)
@@ -866,8 +873,8 @@ if __name__ == "__main__":
             filename, img = images[0]
             print(f"\nDemonstrating augmentations on: {filename}")
 
-            # Create output directory
-            output_dir = "data/augmented"
+            # Create output directory (using absolute path)
+            output_dir = os.path.join(SCRIPT_DIR, "data", "augmented")
             os.makedirs(output_dir, exist_ok=True)
 
             # Apply different augmentations
@@ -890,7 +897,8 @@ if __name__ == "__main__":
             print(f"\nDemo complete! Check {output_dir} for results.")
     else:
         print(f"\nNo test directory found at: {test_dir}")
-        print("Place images in 'data/raw/can' to test the augmentation tools.")
+        expected_path = os.path.join(SCRIPT_DIR, "data", "raw", "can")
+        print(f"Place images in '{expected_path}' to test the augmentation tools.")
 
     print("\n" + "=" * 40)
     print("Available functions:")
