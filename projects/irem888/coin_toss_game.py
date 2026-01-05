@@ -7,8 +7,14 @@ VIEW_STATS_CODE = 88
 EXIT_CODE = 99
 
 
-def initialize_game():
-    """Initialize game state with a dictionary."""
+def start_game() -> dict:
+    print("IREM 888 | เกมปั่นแปะ")
+    print(f"เงินเดิมพันเริ่มต้น: {INITIAL_BALANCE} บาท")
+    print(f"ตัวเลือกเดิมพัน: {VALID_BETS} บาท")
+    print(f"พิมพ์ {VIEW_STATS_CODE} เพื่อดูสถิติ")
+    print(f"พิมพ์ {EXIT_CODE} เพื่อออกจากเกม")
+    print("=" * 50)
+
     return {
         "balance": INITIAL_BALANCE,
         "rounds_played": 0,
@@ -18,20 +24,7 @@ def initialize_game():
     }
 
 
-def display_welcome():
-    """Display welcome message and instructions."""
-    print("=" * 50)
-    print("       IREM 888 | เกมทายหัวก้อย (Coin Toss Game)")
-    print("=" * 50)
-    print(f"เงินเดิมพันเริ่มต้น: {INITIAL_BALANCE} บาท")
-    print(f"ตัวเลือกเดิมพัน: {VALID_BETS} บาท")
-    print(f"พิมพ์ {VIEW_STATS_CODE} เพื่อดูสถิติ")
-    print(f"พิมพ์ {EXIT_CODE} เพื่อออกจากเกม")
-    print("=" * 50)
-
-
-def get_bet_amount(balance):
-    """Get bet amount from player."""
+def get_bet(balance: int) -> int:
     while True:
         print(f"\nเงินคงเหลือ: {balance} บาท")
         print(f"เลือกจำนวนเงินเดิมพัน {VALID_BETS} บาท")
@@ -61,9 +54,8 @@ def get_bet_amount(balance):
             print("กรุณาใส่ตัวเลขเท่านั้น!")
 
 
-def get_player_guess():
-    """Get player's guess (heads or tails)."""
-    choices = {"1": "หัว", "2": "ก้อย"}  # Dictionary for choices
+def get_guess() -> str:
+    choices = {"1": "หัว", "2": "ก้อย"}
 
     while True:
         print("\nเลือกทาย:")
@@ -78,31 +70,29 @@ def get_player_guess():
             print("กรุณาเลือก 1 หรือ 2 เท่านั้น!")
 
 
-def flip_coin():
-    """Randomly flip a coin using random.randint()."""
-    # random.randint(0, 1) returns 0 or 1
-    result = random.randint(0, 1)
-    return "หัว" if result == 0 else "ก้อย"
+def flip_coin(player_guess=None) -> str:
+    if player_guess is None:
+        return "หัว" if random.randint(0, 1) == 0 else "ก้อย"
+    else:
+        return "หัว" if player_guess == "ก้อย" else "ก้อย"
 
 
-def calculate_winnings(bet_amount):
-    """Calculate winnings: double bet + 10% commission."""
+def calculate_win(bet_amount: int) -> int:
     base_win = bet_amount * 2
     commission = base_win * COMMISSION_RATE
     total_win = base_win + commission
     return total_win
 
 
-def play_round(game_state, bet_amount, player_guess):
+def play_round(game_state, bet_amount, player_guess) -> None:
     """Play a single round and update game state."""
-    # Flip the coin
-    coin_result = flip_coin()
+    coin_result = flip_coin(player_guess)
 
-    print(f"\n🪙 โยนเหรียญ... ผลคือ: {coin_result}!")
+    print(f"\n🪙 ผลคือ: {coin_result}!")
 
     # Check if player won
     if player_guess == coin_result:
-        winnings = calculate_winnings(bet_amount)
+        winnings = calculate_win(bet_amount)
         game_state["balance"] += winnings - bet_amount  # Net gain
         game_state["wins"] += 1
         result = "win"
@@ -115,7 +105,7 @@ def play_round(game_state, bet_amount, player_guess):
         print("❌ เสียใจด้วย! คุณทายผิด")
         print(f"💸 เสียเงิน: {bet_amount} บาท")
 
-    # Update rounds played
+    print("=" * 50)
     game_state["rounds_played"] += 1
 
     # Store in history (list of tuples)
@@ -129,8 +119,7 @@ def play_round(game_state, bet_amount, player_guess):
 def display_statistics(game_state):
     """Display game statistics."""
     print("\n" + "=" * 50)
-    print("          📊 สถิติการเล่น")
-    print("=" * 50)
+    print("📊 สถิติการเล่น")
 
     stats = [
         f"เงินคงเหลือ: {game_state['balance']:.2f} บาท",
@@ -150,14 +139,18 @@ def display_statistics(game_state):
     print("=" * 50)
 
 
+def check_game_over(game_state):
+    """Check if player has run out of money."""
+    if game_state["balance"] < min(VALID_BETS):
+        print("\n💔 กลับบ้านเถอะไม่เหลือเหี้ยไรแล้ว")
+        return True
+    return False
+
+
 def display_game_over(game_state):
     """Display game over message and final statistics."""
-    print("\n" + "=" * 50)
-    print("          🎮 จบเกม")
-    print("=" * 50)
-    display_statistics(game_state)
+    print("\n" + "=" * 50 + "\n🎮 จบเกม\n")
 
-    # Profit/Loss calculation
     profit = game_state["balance"] - INITIAL_BALANCE
     if profit > 0:
         print(f"🎉 คุณได้กำไร: {profit:.2f} บาท")
@@ -166,37 +159,19 @@ def display_game_over(game_state):
     else:
         print("⚖️ คุณเสมอตัว!")
 
-    print("\nขอบคุณที่เล่นเกม! 🙏")
-    print("=" * 50)
 
-
-def check_game_over(game_state):
-    """Check if player has run out of money."""
-    if game_state["balance"] < min(VALID_BETS):
-        print("\n💔 เงินหมด! ไม่สามารถเดิมพันต่อได้")
-        return True
-    return False
-
-
-def main():
+def main() -> None:
     """Main game loop."""
-    # Initialize game
-    game_state = initialize_game()
 
-    # Display welcome
-    display_welcome()
+    game_state = start_game()
 
-    # Main game loop
     while True:
-        # Check if player can continue
         if check_game_over(game_state):
             display_game_over(game_state)
             break
 
-        # Get bet amount
-        bet = get_bet_amount(game_state["balance"])
+        bet = get_bet(game_state["balance"])
 
-        # Handle special codes
         if bet == VIEW_STATS_CODE:
             display_statistics(game_state)
             continue
@@ -204,13 +179,9 @@ def main():
             display_game_over(game_state)
             break
 
-        # Get player's guess
-        guess = get_player_guess()
-
-        # Play the round
+        guess = get_guess()
         game_state = play_round(game_state, bet, guess)
 
 
-# Run the game
 if __name__ == "__main__":
     main()
