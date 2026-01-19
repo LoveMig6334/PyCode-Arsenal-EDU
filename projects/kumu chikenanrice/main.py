@@ -31,6 +31,34 @@ def show_resources() -> None:
         print(f"  {item[0]}: {item[1]}")
 
 
+def error_flags(select, unit) -> int:
+    err = 0
+
+    # ตรวจสอบว่าทรัพยากรที่ต้องใช้ (คูณจำนวน unit) มากกว่าที่มีหรือไม่
+    rice_needed = menu[select - 1][2] * unit
+    boiled_chicken_needed = menu[select - 1][3] * unit
+    fried_chicken_needed = menu[select - 1][4] * unit
+
+    if rice_needed > res[0][1]:
+        print("ข้าวหมด")
+        err = 1
+    if boiled_chicken_needed > res[1][1]:
+        print("ไก่ต้มหมด")
+        err = 2
+    if fried_chicken_needed > res[2][1]:
+        print("ไก่ทอดหมด")
+        err = 3
+
+    return err
+
+
+def deduct_resources(select: int, unit: int) -> None:
+    """หักทรัพยากรที่ใช้ไปจากการสั่งอาหาร"""
+    res[0][1] -= menu[select - 1][2] * unit  # ข้าวมัน
+    res[1][1] -= menu[select - 1][3] * unit  # ไก่ต้ม
+    res[2][1] -= menu[select - 1][4] * unit  # ไก่ทอด
+
+
 def main() -> None:
     while True:
         select = int(input("กรุณาเลือกเมนู :"))
@@ -44,30 +72,14 @@ def main() -> None:
 
         elif select >= 1 and select <= len(menu):
             unit = int(input("รับกี่จานดี?"))
-            err = 0
 
-            # ตรวจสอบว่าทรัพยากรที่ต้องใช้ (คูณจำนวน unit) มากกว่าที่มีหรือไม่
-            rice_needed = menu[select - 1][2] * unit
-            boiled_chicken_needed = menu[select - 1][3] * unit
-            fried_chicken_needed = menu[select - 1][4] * unit
-
-            if rice_needed > res[0][1]:
-                print("ข้าวหมด")
-                err = 1
-            if boiled_chicken_needed > res[1][1]:
-                print("ไก่ต้มหมด")
-                err = 2
-            if fried_chicken_needed > res[2][1]:
-                print("ไก่ทอดหมด")
-                err = 3
+            err = error_flags(select, unit)
 
             if err != 0:
                 print("ทรัพยากรไม่พอ กรุณากินอย่างอื่น")
             else:
                 # หักทรัพยากรที่ใช้ไป
-                res[0][1] -= rice_needed
-                res[1][1] -= boiled_chicken_needed
-                res[2][1] -= fried_chicken_needed
+                deduct_resources(select, unit)
 
                 print(
                     f"คุณสั่ง {menu[select - 1][0]} จำนวน {unit} หน่วย รวมยอดจ่าย {menu[select - 1][1] * unit}บาท"
