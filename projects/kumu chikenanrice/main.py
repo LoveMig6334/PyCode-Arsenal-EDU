@@ -31,7 +31,7 @@ def show_resources() -> None:
         print(f"  {item[0]}: {item[1]}")
 
 
-def error_flags(select, unit) -> int:
+def error_flags(select: int, unit: int) -> int:
     err = 0
 
     # ตรวจสอบว่าทรัพยากรที่ต้องใช้ (คูณจำนวน unit) มากกว่าที่มีหรือไม่
