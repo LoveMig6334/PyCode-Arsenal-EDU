@@ -7,7 +7,7 @@ menu = [
     ["ไก่ผสมสับ", 150, 0, 1.8, 1.8],
     ["ข้าวเปล่า", 10, 1.2, 0, 0],
 ]
-sum = [0, 0, 0, 0, 0, 0, 0]
+sums = [0, 0, 0, 0, 0, 0, 0]
 res = [["ข้าวมัน", 100], ["ไก่ต้ม", 50], ["ไก่ทอด", 50]]
 
 
@@ -16,8 +16,8 @@ def close_shop() -> None:
     print("ร้านปิดเเล้ว วันนี้คุณขายได้...")
     total = 0
     for i in range(len(menu)):
-        print(f"{menu[i][0]}= {sum[i]} เป็นเงิน {menu[i][1] * sum[i]}บาท")
-        total = total + menu[i][1] * sum[i]
+        print(f"{menu[i][0]}= {sums[i]} เป็นเงิน {menu[i][1] * sums[i]}บาท")
+        total = total + menu[i][1] * sums[i]
 
     print(f"รวมยอดรายรับ {total}")
     print("""-เมื่อสิ้นวันให้แสดงจำนวนขายแต่ละเมนูและยอดขายรวมในเมนูนั้นๆ
@@ -73,8 +73,8 @@ def main() -> None:
                     f"คุณสั่ง {menu[select - 1][0]} จำนวน {unit} หน่วย รวมยอดจ่าย {menu[select - 1][1] * unit}บาท"
                 )
 
-                sum[select - 1] = sum[select - 1] + unit
-                print(sum)
+                sums[select - 1] = sums[select - 1] + unit
+                print(sums)
 
         else:
             print("ผิดพลาด ไม่มีเมนู")
