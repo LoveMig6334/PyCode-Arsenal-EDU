@@ -11,27 +11,36 @@ sum = [0, 0, 0, 0, 0, 0, 0]
 res = [["ข้าวมัน", 100], ["ไก่ต้ม", 50], ["ไก่ทอด", 50]]
 
 
+def close_shop() -> None:
+    """แสดงสรุปยอดขายและปิดร้าน"""
+    print("ร้านปิดเเล้ว วันนี้คุณขายได้...")
+    total = 0
+    for i in range(len(menu)):
+        print(f"{menu[i][0]}= {sum[i]} เป็นเงิน {menu[i][1] * sum[i]}บาท")
+        total = total + menu[i][1] * sum[i]
+
+    print(f"รวมยอดรายรับ {total}")
+    print("""-เมื่อสิ้นวันให้แสดงจำนวนขายแต่ละเมนูและยอดขายรวมในเมนูนั้นๆ
+         -เมื่อสิ้นวันให้สรุปยอดขายรวมได้""")
+
+
+def show_resources() -> None:
+    """แสดงทรัพยากรที่เหลืออยู่"""
+    print("ทรัพยากรที่เหลือ")
+    for item in res:
+        print(f"  {item[0]}: {item[1]}")
+
+
 def main() -> None:
     while True:
         select = int(input("กรุณาเลือกเมนู :"))
 
         if select == 99:
-            total = 0
-            print("ร้านปิดเเล้ว วันนี้คุณขายได้...")
-            for i in range(len(menu)):
-                print(f"{menu[i][0]}= {sum[i]} เป็นเงิน {menu[i][1] * sum[i]}บาท")
-                total = total + menu[i][1] * sum[i]
-
-            print(f"รวมยอดรายรับ {total}")
-
-            print("""-เมื่อสิ้นวันให้แสดงจำนวนขายแต่ละเมนูและยอดขายรวมในเมนูนั้นๆ
-             -เมื่อสิ้นวันให้สรุปยอดขายรวมได้""")
+            close_shop()
             break
 
         elif select == 88:
-            print("ทรัพยากรที่เหลือ")
-            for i in res:
-                print(i[0], i[1])
+            show_resources()
 
         elif select >= 1 and select <= len(menu):
             unit = int(input("รับกี่จานดี?"))
