@@ -59,9 +59,24 @@ def deduct_resources(select: int, unit: int) -> None:
     res[2][1] -= menu[select - 1][4] * unit  # ไก่ทอด
 
 
+def print_resources(err, select, unit) -> None:
+    if err != 0:
+        print("ทรัพยากรไม่พอ กรุณากินอย่างอื่น")
+    else:
+        # หักทรัพยากรที่ใช้ไป
+        deduct_resources(select, unit)
+
+        print(
+            f"คุณสั่ง {menu[select - 1][0]} จำนวน {unit} หน่วย รวมยอดจ่าย {menu[select - 1][1] * unit}บาท"
+        )
+
+        sums[select - 1] = sums[select - 1] + unit
+        print(sums)
+
+
 def main() -> None:
     while True:
-        select = int(input("กรุณาเลือกเมนู :"))
+        select = int(input("กรุณาเลือกเมนู : "))
 
         if select == 99:
             close_shop()
@@ -71,23 +86,11 @@ def main() -> None:
             show_resources()
 
         elif select >= 1 and select <= len(menu):
-            unit = int(input("รับกี่จานดี?"))
+            unit = int(input("รับกี่จานดี? : "))
 
             err = error_flags(select, unit)
 
-            if err != 0:
-                print("ทรัพยากรไม่พอ กรุณากินอย่างอื่น")
-            else:
-                # หักทรัพยากรที่ใช้ไป
-                deduct_resources(select, unit)
-
-                print(
-                    f"คุณสั่ง {menu[select - 1][0]} จำนวน {unit} หน่วย รวมยอดจ่าย {menu[select - 1][1] * unit}บาท"
-                )
-
-                sums[select - 1] = sums[select - 1] + unit
-                print(sums)
-
+            print_resources(err, select, unit)
         else:
             print("ผิดพลาด ไม่มีเมนู")
 
