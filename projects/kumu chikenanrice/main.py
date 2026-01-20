@@ -87,10 +87,8 @@ def main() -> None:
 
         elif select >= 1 and select <= len(menu):
             unit = int(input("รับกี่จานดี? : "))
+            print_resources(error_flags(select, unit), select, unit)
 
-            err = error_flags(select, unit)
-
-            print_resources(err, select, unit)
         else:
             print("ผิดพลาด ไม่มีเมนู")
 
