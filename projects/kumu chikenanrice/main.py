@@ -1,96 +1,150 @@
-menu = [
-    ["ข้าวมันไก่ต้ม", 50, 0.9, 1.2, 0],
-    ["ข้าวมันไก่ทอด", 50, 0.9, 0, 1.2],
-    ["ข้าวมันไก่ผสม", 70, 1.1, 0.7, 0.7],
-    ["ไก่ต้มสับ", 120, 0, 2.7, 0],
-    ["ไก่ทอดสับ", 120, 0, 0, 2.7],
-    ["ไก่ผสมสับ", 150, 0, 1.8, 1.8],
-    ["ข้าวเปล่า", 10, 1.2, 0, 0],
+MENU = [
+    ["ข้าวมันไก่ต้ม", 50, 1.2, 0.8, 0],
+    ["ข้าวมันไก่ทอด", 50, 1.2, 0, 0.8],
+    ["ข้าวมันไก่ผสม", 70, 1.2, 0.6, 0.6],
+    ["ไก่ต้มสับ", 120, 0, 1.8, 0],
+    ["ไก่ทอดสับ", 120, 0, 0, 1.8],
+    ["ไก่ผสมสับ", 150, 0, 1, 1],
+    ["ข้าวเปล่า", 10, 1.5, 0, 0],
 ]
-sums = [0, 0, 0, 0, 0, 0, 0]
-res = [["ข้าวมัน", 100], ["ไก่ต้ม", 50], ["ไก่ทอด", 50]]
+RES_NAME = ["ข้าว", "ไก่ต้ม", "ไก่ทอด"]
+RES_COST = [3, 5, 6]
+
+res = [0.0, 0.0, 0.0]
+sales = [0] * 7
+money = 0.0
 
 
-def close_shop() -> None:
-    """แสดงสรุปยอดขายและปิดร้าน"""
-    print("ร้านปิดเเล้ว วันนี้คุณขายได้...")
-    total = 0
-    for i in range(len(menu)):
-        print(f"{menu[i][0]}= {sums[i]} เป็นเงิน {menu[i][1] * sums[i]}บาท")
-        total = total + menu[i][1] * sums[i]
-
-    print(f"รวมยอดรายรับ {total}")
-    print("""-เมื่อสิ้นวันให้แสดงจำนวนขายแต่ละเมนูและยอดขายรวมในเมนูนั้นๆ
-         -เมื่อสิ้นวันให้สรุปยอดขายรวมได้""")
+def show_menu():
+    print("\n──── เมนู ────")
+    for i, m in enumerate(MENU, 1):
+        avail = "v" if can_make(i - 1, 1) else "x"
+        print(f"  {i}. {m[0]} ({m[1]}฿) [{avail}]")
+    print("  77=ซื้อวัตถุดิบ  88=ดูทรัพยากร  99=ปิดร้าน")
 
 
-def show_resources() -> None:
-    """แสดงทรัพยากรที่เหลืออยู่"""
-    print("ทรัพยากรที่เหลือ")
-    for item in res:
-        print(f"  {item[0]}: {item[1]}")
+def show_res():
+    print("\n── ทรัพยากร ──")
+    for i in range(3):
+        print(f"  {RES_NAME[i]}: {res[i]:.1f}")
+    print(f"  เงิน: {money:.0f} บาท")
 
 
-def error_flags(select: int, unit: int) -> int:
-    err = 0
-
-    # ตรวจสอบว่าทรัพยากรที่ต้องใช้ (คูณจำนวน unit) มากกว่าที่มีหรือไม่
-    rice_needed = menu[select - 1][2] * unit
-    boiled_chicken_needed = menu[select - 1][3] * unit
-    fried_chicken_needed = menu[select - 1][4] * unit
-
-    if rice_needed > res[0][1]:
-        print("ข้าวหมด")
-        err = 1
-    if boiled_chicken_needed > res[1][1]:
-        print("ไก่ต้มหมด")
-        err = 2
-    if fried_chicken_needed > res[2][1]:
-        print("ไก่ทอดหมด")
-        err = 3
-
-    return err
-
-
-def deduct_resources(select: int, unit: int) -> None:
-    """หักทรัพยากรที่ใช้ไปจากการสั่งอาหาร"""
-    res[0][1] -= menu[select - 1][2] * unit  # ข้าวมัน
-    res[1][1] -= menu[select - 1][3] * unit  # ไก่ต้ม
-    res[2][1] -= menu[select - 1][4] * unit  # ไก่ทอด
+def buy():
+    global money
+    print("\n── ซื้อวัตถุดิบ ──")
+    for i in range(3):
+        print(f"  {i + 1}. {RES_NAME[i]} (หน่วยละ {RES_COST[i]}฿)")
+    try:
+        s = int(input("เลือก (0=กลับ): "))
+        if not 1 <= s <= 3:
+            return
+        q = int(input("จำนวน: "))
+        if q <= 0:
+            return
+    except ValueError:
+        print("ใส่ตัวเลข")
+        return
+    cost = RES_COST[s - 1] * q
+    res[s - 1] += q
+    money -= cost
+    print(f"  ซื้อ {RES_NAME[s - 1]} {q} หน่วย จ่าย {cost}฿")
 
 
-def print_resources(err, select, unit) -> None:
-    if err != 0:
-        print("ทรัพยากรไม่พอ กรุณากินอย่างอื่น")
-    else:
-        # หักทรัพยากรที่ใช้ไป
-        deduct_resources(select, unit)
-
-        print(
-            f"คุณสั่ง {menu[select - 1][0]} จำนวน {unit} หน่วย รวมยอดจ่าย {menu[select - 1][1] * unit}บาท"
-        )
-
-        sums[select - 1] = sums[select - 1] + unit
-        print(sums)
+def can_make(idx, qty):
+    return all(MENU[idx][2 + j] * qty <= res[j] for j in range(3))
 
 
-def main() -> None:
+def order(idx, qty):
+    global money
+    for j in range(3):
+        res[j] -= MENU[idx][2 + j] * qty
+    sales[idx] += qty
+    total = MENU[idx][1] * qty
+    money += total
+    print(f"  {MENU[idx][0]} x{qty} = {total}฿")
+
+
+def close_day():
+    print("\n════ สรุปยอดขาย ════")
+    grand = 0
+    for i in range(7):
+        rev = MENU[i][1] * sales[i]
+        if sales[i]:
+            print(f"  {MENU[i][0]}: {sales[i]} จาน = {rev}฿")
+        grand += rev
+    print(f"  รวมรายได้: {grand}฿")
+    print(f"  เงินคงเหลือ: {money:.0f}฿")
+    show_res()
+
+
+def buy_loop(label):
+    print(f"\n== {label} ==")
     while True:
-        select = int(input("กรุณาเลือกเมนู : "))
-
-        if select == 99:
-            close_shop()
+        show_res()
+        buy()
+        if input("ซื้อเพิ่ม? (y/n): ").strip().lower() != "y":
             break
 
-        elif select == 88:
-            show_resources()
 
-        elif select >= 1 and select <= len(menu):
-            unit = int(input("รับกี่จานดี? : "))
-            print_resources(error_flags(select, unit), select, unit)
+def main():
+    global money, sales, res
+    # เริ่มต้นวัตถุดิบวันแรก
+    res = [100.0, 50.0, 50.0]
+    money = -(100 * 3 + 50 * 5 + 50 * 6)  # -850
+    day = 1
 
-        else:
-            print("ผิดพลาด ไม่มีเมนู")
+    while True:
+        print(f"\n{'=' * 30}\n  วันที่ {day} | เงิน: {money:.0f}฿\n{'=' * 30}")
+        sales = [0] * 7
+
+        # ซื้อวัตถุดิบเพิ่ม (ถ้าต้องการ)
+        if input("ซื้อวัตถุดิบเพิ่ม? (y/n): ").strip().lower() == "y":
+            buy_loop("ซื้อวัตถุดิบเพิ่ม")
+
+        # เปิดขาย
+        while True:
+            show_menu()
+            try:
+                s = int(input("สั่งเมนู: "))
+            except ValueError:
+                print("ใส่ตัวเลข")
+                continue
+
+            if s == 99:
+                close_day()
+                break
+            elif s == 88:
+                show_res()
+            elif s == 77:
+                buy()
+            elif 1 <= s <= 7:
+                try:
+                    q = int(input("จำนวน: "))
+                except ValueError:
+                    print("ใส่ตัวเลข")
+                    continue
+                if q <= 0:
+                    continue
+                if not can_make(s - 1, q):
+                    print("  ทรัพยากรไม่พอ!")
+                    for j in range(3):
+                        need = MENU[s - 1][2 + j] * q
+                        if need > res[j]:
+                            print(
+                                f"    {RES_NAME[j]}: ต้องการ {need:.1f} มี {res[j]:.1f}"
+                            )
+                else:
+                    order(s - 1, q)
+            else:
+                print("ไม่มีเมนูนี้")
+
+        # จบวัน - ซื้อวัตถุดิบวันถัดไป
+        if input("\nเปิดวันถัดไป? (y/n): ").strip().lower() != "y":
+            print("ขอบคุณครับ!")
+            break
+        buy_loop("ซื้อวัตถุดิบสำหรับวันถัดไป")
+        day += 1
 
 
 if __name__ == "__main__":
