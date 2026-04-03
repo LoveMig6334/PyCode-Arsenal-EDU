@@ -1,23 +1,18 @@
-string = input()
+import itertools
 
 
-separation_list = []
-separated_string = []
+def theos_text_encoder(string: str) -> str:
+    breakdown: list = ["".join(g) for k, g in itertools.groupby(string)]
+    result = "".join(f"{len(s)}{s[0]}" for s in breakdown)
 
-for char in range(len(string)):
-    if char == 0:
-        separation_list.append(string[char])
-    else:
-        if string[char] != string[char - 1]:
-            separated_string.append((separation_list))
-            separation_list = []
-            separation_list.append(string[char])
-        elif char == len(string) - 1:
-            separation_list.append(string[char])
-            separated_string.append((separation_list))
-        else:
-            separation_list.append(string[char])
+    return result
 
 
-for pack in separated_string:
-    print(f"{len(pack)}{pack[0]}", end="")
+def main() -> None:
+    text = input()
+    print(theos_text_encoder(text))
+    print()
+
+
+if __name__ == "__main__":
+    main()
