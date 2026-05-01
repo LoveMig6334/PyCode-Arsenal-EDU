@@ -63,7 +63,7 @@ def system_odes(t, S, m1, m2, m3):
 time_s, time_e = 0, 7
 t_points = np.linspace(time_s, time_e, 2001)
 
-t1 = time.time()
+t1 = time.perf_counter()
 solution = solve_ivp(
     fun=system_odes,
     t_span=(time_s, time_e),
@@ -71,8 +71,8 @@ solution = solve_ivp(
     t_eval=t_points,
     args=(m1, m2, m3),
 )
-t2 = time.time()
-print(f"Solved in: {t2 - t1:.3f} [s]")
+t2 = time.perf_counter()
+print(f"Solved in: {t2 - t1:.5f} [s]")
 
 
 t_sol = solution.t
