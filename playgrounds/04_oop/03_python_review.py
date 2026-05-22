@@ -13,11 +13,11 @@ print("=" * 50)
 # แบบปกติ (for loop)
 squares_loop = []
 for i in range(1, 6):
-    squares_loop.append(i ** 2)
+    squares_loop.append(i**2)
 
 # แบบ list comprehension — ทำสิ่งเดียวกันแต่สั้นกว่า
 # โครงสร้าง: [expression for item in iterable]
-squares = [i ** 2 for i in range(1, 6)]
+squares = [i**2 for i in range(1, 6)]
 print(f"ยกกำลังสอง: {squares}")  # [1, 4, 9, 16, 25]
 
 # ใส่เงื่อนไข (filter) — เอาเฉพาะเลขคู่
@@ -78,14 +78,14 @@ print(f"f-string: {name} ได้ {score:.1f} คะแนน")  # .1f = ทศ
 
 # Slicing — ตัด string เหมือน list
 text = "ABCDEFGH"
-print(f"text[2:5]  = '{text[2:5]}'")   # CDE (index 2,3,4)
-print(f"text[:3]   = '{text[:3]}'")     # ABC (ตั้งแต่ต้นถึง index 2)
-print(f"text[-3:]  = '{text[-3:]}'")    # FGH (3 ตัวท้าย)
-print(f"text[::2]  = '{text[::2]}'")    # ACEG (เว้นตัว)
-print(f"text[::-1] = '{text[::-1]}'")   # กลับหลัง
+print(f"text[2:5]  = '{text[2:5]}'")  # CDE (index 2,3,4)
+print(f"text[:3]   = '{text[:3]}'")  # ABC (ตั้งแต่ต้นถึง index 2)
+print(f"text[-3:]  = '{text[-3:]}'")  # FGH (3 ตัวท้าย)
+print(f"text[::2]  = '{text[::2]}'")  # ACEG (เว้นตัว)
+print(f"text[::-1] = '{text[::-1]}'")  # กลับหลัง
 
 # เช็คว่ามีคำอยู่ไหม
-print(f"'CD' in text: {'CD' in text}")           # True
+print(f"'CD' in text: {'CD' in text}")  # True
 print(f"startswith:   {text.startswith('ABC')}")  # True
 
 print()
@@ -97,9 +97,11 @@ print("=" * 50)
 print("3. LAMBDA FUNCTION")
 print("=" * 50)
 
+
 # ฟังก์ชันปกติ
 def add_normal(a, b):
     return a + b
+
 
 # Lambda — เหมือนกันแต่เขียนบรรทัดเดียว
 # โครงสร้าง: lambda parameters: expression
@@ -121,7 +123,7 @@ adults = list(filter(lambda x: x >= 18, [15, 22, 17, 30, 12]))
 print(f"filter >=18: {adults}")
 
 # เปรียบเทียบ: ใช้ list comprehension แทน map/filter ก็ได้ (อ่านง่ายกว่า)
-doubled_lc = [x * 2 for x in nums]          # เหมือน map
+doubled_lc = [x * 2 for x in nums]  # เหมือน map
 adults_lc = [x for x in [15, 22, 17, 30, 12] if x >= 18]  # เหมือน filter
 print(f"(comprehension ก็ได้ผลเหมือนกัน)")
 
@@ -205,7 +207,7 @@ class Animal:
 
     def __init__(self, name: str, sound: str):
         """สร้าง object ใหม่ — __init__ จะถูกเรียกอัตโนมัติ"""
-        self.name = name      # instance variable — แต่ละตัวมีค่าของตัวเอง
+        self.name = name  # instance variable — แต่ละตัวมีค่าของตัวเอง
         self.sound = sound
         self.energy = 100
         Animal.count += 1
@@ -242,8 +244,8 @@ cat = Animal("มีมี่", "Meow")
 dog = Dog("โกลเด้น", "Golden Retriever")
 
 print(cat.speak())
-print(dog.speak())         # ใช้ method ที่ override
-print(dog.eat("bone"))     # ใช้ method จาก Animal (สืบทอดมา)
+print(dog.speak())  # ใช้ method ที่ override
+print(dog.eat("bone"))  # ใช้ method จาก Animal (สืบทอดมา)
 print(dog.fetch("ball"))
 print(f"สัตว์ทั้งหมด: {Animal.count} ตัว")
 print(f"dog เป็น Animal ไหม? {isinstance(dog, Animal)}")  # True
@@ -270,8 +272,7 @@ class Classroom:
     def averages(self) -> dict[str, float]:
         """ใช้ dict comprehension + lambda ผสมกัน"""
         return {
-            name: sum(scores) / len(scores)
-            for name, scores in self.students.items()
+            name: sum(scores) / len(scores) for name, scores in self.students.items()
         }
 
     def top_students(self, min_avg: float = 80) -> list[str]:
@@ -283,7 +284,9 @@ class Classroom:
         """ใช้ f-string + join + sorted + lambda"""
         avgs = self.averages()
         ranked = sorted(avgs.items(), key=lambda x: x[1], reverse=True)
-        lines = [f"  {i+1}. {name}: {avg:.1f}" for i, (name, avg) in enumerate(ranked)]
+        lines = [
+            f"  {i + 1}. {name}: {avg:.1f}" for i, (name, avg) in enumerate(ranked)
+        ]
         return f"ห้อง {self.room}\n" + "\n".join(lines)
 
 

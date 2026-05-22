@@ -45,10 +45,12 @@ print(f"  เวลา: {time.perf_counter() - start:.4f} วินาที (�
 def fib_memo(n: int, memo: dict[int, int] = {}) -> int:
     if n <= 1:
         return n
-    if n in memo:       # เคยคิดแล้ว? ส่งคำตอบเดิมกลับเลย
+    if n in memo:  # เคยคิดแล้ว? ส่งคำตอบเดิมกลับเลย
         return memo[n]
     memo[n] = fib_memo(n - 1, memo) + fib_memo(n - 2, memo)
     return memo[n]
+
+
 # Time: O(n), Space: O(n)
 
 
@@ -63,12 +65,14 @@ print(f"  เวลา: {time.perf_counter() - start:.6f} วินาที (�
 def fib_tab(n: int) -> int:
     if n <= 1:
         return n
-    dp = [0] * (n + 1)   # สร้างตาราง
+    dp = [0] * (n + 1)  # สร้างตาราง
     dp[0] = 0
     dp[1] = 1
     for i in range(2, n + 1):
         dp[i] = dp[i - 1] + dp[i - 2]  # ใช้คำตอบก่อนหน้า
     return dp[n]
+
+
 # Time: O(n), Space: O(n)
 
 
@@ -81,6 +85,8 @@ def fib_optimized(n: int) -> int:
     for _ in range(2, n + 1):
         prev2, prev1 = prev1, prev2 + prev1
     return prev1
+
+
 # Time: O(n), Space: O(1) — ดีที่สุด!
 
 
@@ -238,7 +244,7 @@ def knapsack_visual(weights: list[int], values: list[int], capacity: int):
     print(f"  ← น้ำหนักกระเป๋า")
     print(f"  {'':>12}-+-{'----' * (capacity + 1)}")
     for i in range(n + 1):
-        label = "ไม่มีของ" if i == 0 else f"ของ{i}(w={weights[i-1]},v={values[i-1]})"
+        label = "ไม่มีของ" if i == 0 else f"ของ{i}(w={weights[i - 1]},v={values[i - 1]})"
         print(f"  {label:>12} | ", end="")
         for c in range(capacity + 1):
             print(f"{dp[i][c]:>3}", end=" ")
@@ -310,9 +316,9 @@ def lcs(s1: str, s2: str) -> tuple[int, str]:
 
 s1, s2 = "ABCBDAB", "BDCAB"
 length, subseq = lcs(s1, s2)
-print(f"  s1 = \"{s1}\"")
-print(f"  s2 = \"{s2}\"")
-print(f"  LCS = \"{subseq}\" (ยาว {length})")
+print(f'  s1 = "{s1}"')
+print(f'  s2 = "{s2}"')
+print(f'  LCS = "{subseq}" (ยาว {length})')
 
 print()
 
@@ -346,6 +352,8 @@ def lis(arr: list[int]) -> int:
     print(f"  arr = {arr}")
     print(f"  dp  = {dp}")
     return max(dp)
+
+
 # Time: O(n²) — มีวิธี O(n log n) ด้วย binary search แต่เข้าใจยากกว่า
 
 
